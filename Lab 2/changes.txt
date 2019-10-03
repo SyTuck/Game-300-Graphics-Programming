@@ -1,0 +1,32 @@
+1. 
+added glew.h to lib folder
+added glew32.dll to SDLGame folder
+
+2. open up the project and change the project settings to have:
+Linker>input> additional dependencies: ( add to the front. do not replace existing items listed)
+glew32.lib;opengl32.lib;
+
+2. added to main.cpp:
+
+//new OpenGL/GLEW headers:
+#define GL3_PROTOTYPES 1
+#include "glew.h"
+
+3. change the window type to be SDL_WINDOW_OPENGL instead of SDL_WINDOW_SHOWN for the last parameter
+
+// Our opengl context handle
+SDL_GLContext GLContext;
+SDL_Window *window;
+
+3. build and make sure it runs.
+
+
+4. initialize context for openGL
+after  we create the SDL rendered.
+
+	// intialize our context using our window as the source
+	GLContext = SDL_GL_CreateContext(window);
+
+5. initialize glew at end of init function, before returning
+	glewInit();
+
