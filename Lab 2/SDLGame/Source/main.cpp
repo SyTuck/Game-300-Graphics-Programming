@@ -149,6 +149,69 @@ void DoTaskIII(float f[])
 	glDisableClientState(GL_COLOR_ARRAY);
 }
 
+//TASK IV
+
+float task4ColourArray[1000] = {};
+float task4Vertices[1000] = {};
+unsigned int task4TriangleMap[1000] = {};
+
+#define xOFFSET 0.5f
+#define yOFFSET -0.5f
+#define RADIUS 0.5f
+#define MINTRIS 30					//for our 1000 arrays, we have a max of 250 triangles
+#define MAXTRIS 250
+#define CIRCLERADIANS (2 * 3.14159265)
+
+int currentNumOfTris = MINTRIS;
+
+void DoTaskIV(float f[])
+{
+	task4Vertices[0] = xOFFSET;						//the first vertex will be the origin/common to all the triangles
+	task4Vertices[1] = yOFFSET;
+	task4Vertices[2] = 0.0f;
+	task4ColourArray[0] = 1.0f;						//set to white and full alpha so it's always present
+	task4ColourArray[1] = 1.0f;
+	task4ColourArray[2] = 1.0f;
+	task4ColourArray[3] = 1.0f;
+
+	float angleStep = CIRCLERADIANS / currentNumOfTris;		//pre calculate for efficiency
+
+	for (int a = 1; a < currentNumOfTris + 1; a++)
+	{
+		task4Vertices[a * 3 + 0] = (RADIUS * cos(angleStep * a)) + xOFFSET;	//X position of vertex
+		task4Vertices[a * 3 + 1] = (RADIUS * sin(angleStep * a)) + yOFFSET;	//Y position of vertex
+//		task4Vertices[a * 3 + 2] = 0.0f;									//Z position is always 0 and only here as a placeholder
+
+		int colr = rand() % 3;
+		task4ColourArray[a * 4 + 0] = f[rand() % 3];
+		task4ColourArray[a * 4 + 1] = f[rand() % 3];
+		task4ColourArray[a * 4 + 2] = f[rand() % 3];
+		task4ColourArray[a * 4 + 3] = 1.0f;
+	}
+
+	int triMapIdx = 0;
+	task4TriangleMap[triMapIdx++] = 0;
+	
+	for (int a = 1; a < currentNumOfTris; a++)
+	{
+		task4TriangleMap[triMapIdx++] = a;
+		task4TriangleMap[triMapIdx++] = a + 1;
+		task4TriangleMap[triMapIdx++] = 0;
+	}
+	task4TriangleMap[triMapIdx++] = currentNumOfTris;
+	task4TriangleMap[triMapIdx++] = 1;
+
+	glEnableClientState(GL_VERTEX_ARRAY);
+	glEnableClientState(GL_COLOR_ARRAY);
+
+	glColorPointer(4, GL_FLOAT, 0, &task4ColourArray[0]);
+	glVertexPointer(3, GL_FLOAT, 0, &task4Vertices[0]);
+
+	glDrawElements(GL_TRIANGLES, triMapIdx, GL_UNSIGNED_INT, &task4TriangleMap[0]);
+
+	glDisableClientState(GL_VERTEX_ARRAY);
+	glDisableClientState(GL_COLOR_ARRAY);
+}
 int main(int argc, char *argv[])
 {
 	SDL_Window *window;
@@ -192,6 +255,9 @@ int main(int argc, char *argv[])
 	
 		//************	Task III	**********************
 		DoTaskIII(fader);
+
+		//Task IV Bonus fun :)
+		DoTaskIV(fader);
 
 		SDL_GL_SwapWindow(window);
 
