@@ -45,8 +45,8 @@ void DoTaskI(float f0, float f1, float f2)
 	for (float x = -128.0f; x < 128.0f; x++)										//to test banding and colour resolution
 	{																				//(need to repeat with thicker lines or full boxes/triangles)
 		glBegin(GL_LINES);
-		glColor4f(((x + 128.0) / 256.0), 0.0f, 0.0f, 1.0f);							//each line segment is 1/256th width of the screen
-		glVertex3f(x / 128.0f, 1.0f - 0.04f, 0.0f);						//with 1 / 256th of a colour increment from the previous segment
+		glColor4f(((x + 128.0f) / 256.0f), 0.0f, 0.0f, 1.0f);							//each line segment is 1/256th width of the screen
+		glVertex3f (x / 128.0f, 1.0f - 0.04f, 0.0f);						//with 1 / 256th of a colour increment from the previous segment
 		glVertex3f((x + 1.0f) / 128.0f, 1.0f - 0.04f, 0.0f);
 
 		glColor4f(0.0f, ((x + 128.0f) / 256.0f), 0.0f, 1.0f);
@@ -157,36 +157,65 @@ unsigned int task4TriangleMap[1000] = {};
 
 #define xOFFSET 0.5f
 #define yOFFSET -0.5f
-#define RADIUS 0.5f
-#define MINTRIS 30					//for our 1000 arrays, we have a max of 250 triangles
-#define MAXTRIS 250
+#define xRADIUS (0.5f *0.75f)
+#define yRADIUS  0.5f
+#define MINTRIS 3					//for our 1000 arrays, we have a max of 250 triangles
+#define MAXTRIS 249
 #define CIRCLERADIANS (2 * 3.14159265)
+#define CIRCLESEGMENTS ((2 * 3.14159265)/3)
 
 int currentNumOfTris = MINTRIS;
+int TriCountTick = 0;
 
 void DoTaskIV(float f[])
 {
 	task4Vertices[0] = xOFFSET;						//the first vertex will be the origin/common to all the triangles
 	task4Vertices[1] = yOFFSET;
 	task4Vertices[2] = 0.0f;
-	task4ColourArray[0] = 1.0f;						//set to white and full alpha so it's always present
-	task4ColourArray[1] = 1.0f;
-	task4ColourArray[2] = 1.0f;
+	task4ColourArray[0] = f[0];						//set to white and full alpha so it's always present
+	task4ColourArray[1] = f[1];
+	task4ColourArray[2] = f[2];
 	task4ColourArray[3] = 1.0f;
+
+	TriCountTick++;
+	if (TriCountTick > (MAXTRIS - currentNumOfTris) / 4)
+	{
+		TriCountTick = 0;
+		currentNumOfTris++;
+		if (currentNumOfTris > MAXTRIS)
+		{
+			currentNumOfTris = MINTRIS;
+		}
+	}
 
 	float angleStep = CIRCLERADIANS / currentNumOfTris;		//pre calculate for efficiency
 
 	for (int a = 1; a < currentNumOfTris + 1; a++)
 	{
-		task4Vertices[a * 3 + 0] = (RADIUS * cos(angleStep * a)) + xOFFSET;	//X position of vertex
-		task4Vertices[a * 3 + 1] = (RADIUS * sin(angleStep * a)) + yOFFSET;	//Y position of vertex
-//		task4Vertices[a * 3 + 2] = 0.0f;									//Z position is always 0 and only here as a placeholder
+		task4Vertices[a * 3 + 0] = (xRADIUS * cos(angleStep * a)) + xOFFSET;	//X position of vertex
+		task4Vertices[a * 3 + 1] = (yRADIUS * sin(angleStep * a)) + yOFFSET;	//Y position of vertex
+		task4Vertices[a * 3 + 2] = 0.0f;									//Z position is always 0 and only here as a placeholder
 
-		int colr = rand() % 3;
-		task4ColourArray[a * 4 + 0] = f[rand() % 3];
-		task4ColourArray[a * 4 + 1] = f[rand() % 3];
-		task4ColourArray[a * 4 + 2] = f[rand() % 3];
+		task4ColourArray[a * 4 + 0] = 0.0f;					//default everyone as off and then paint the Red, green, or blue
+		task4ColourArray[a * 4 + 1] = 0.0f;					//depending on if they are in the first, second, or third segments
+		task4ColourArray[a * 4 + 2] = 0.0f;
 		task4ColourArray[a * 4 + 3] = 1.0f;
+
+		if (a*angleStep < CIRCLESEGMENTS)
+		{
+			task4ColourArray[a * 4 + 2] = 1.0f - ((a*angleStep / CIRCLESEGMENTS) - long(a*angleStep / CIRCLESEGMENTS));
+			task4ColourArray[a * 4 + 0] =(a*angleStep / CIRCLESEGMENTS) - long (a*angleStep / CIRCLESEGMENTS);
+		}
+		else if (a*angleStep < (2 * CIRCLESEGMENTS))
+		{
+			task4ColourArray[a * 4 + 0] = 1.0f - ((a*angleStep / CIRCLESEGMENTS) - long(a*angleStep / CIRCLESEGMENTS));
+			task4ColourArray[a * 4 + 1] = (a*angleStep / CIRCLESEGMENTS) - long(a*angleStep / CIRCLESEGMENTS);
+		}
+		else
+		{
+			task4ColourArray[a * 4 + 1] = 1.0f - ((a*angleStep / CIRCLESEGMENTS) - long(a*angleStep / CIRCLESEGMENTS));
+			task4ColourArray[a * 4 + 2] = (a*angleStep / CIRCLESEGMENTS) - long(a*angleStep / CIRCLESEGMENTS);
+		}
 	}
 
 	int triMapIdx = 0;
