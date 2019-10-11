@@ -32,6 +32,16 @@ bool GameRunning = true;
 void DisplaySplashScreen(SDL_Window* mainWindow, SDL_Renderer* mainRenderer);
 bool Init(SDL_Window** mainWindow, SDL_Renderer** mainRenderer);
 
+/********************************************************************
+	DoTaskI
+
+	Draw a point, line, and a triangle
+
+	also testing out colour banding by drawing 1bit increments of 
+	each discrete colour
+
+	Also added in a colour fader just to make it interesting
+********************************************************************/
 void DoTaskI(float f0, float f1, float f2)
 {
 	glPointSize(16.0f);
@@ -45,8 +55,8 @@ void DoTaskI(float f0, float f1, float f2)
 	for (float x = -128.0f; x < 128.0f; x++)										//to test banding and colour resolution
 	{																				//(need to repeat with thicker lines or full boxes/triangles)
 		glBegin(GL_LINES);
-		glColor4f(((x + 128.0f) / 256.0f), 0.0f, 0.0f, 1.0f);							//each line segment is 1/256th width of the screen
-		glVertex3f (x / 128.0f, 1.0f - 0.04f, 0.0f);						//with 1 / 256th of a colour increment from the previous segment
+		glColor4f(((x + 128.0f) / 256.0f), 0.0f, 0.0f, 1.0f);						//each line segment is 1/256th width of the screen
+		glVertex3f (x / 128.0f, 1.0f - 0.04f, 0.0f);								//with 1 / 256th of a colour increment from the previous segment
 		glVertex3f((x + 1.0f) / 128.0f, 1.0f - 0.04f, 0.0f);
 
 		glColor4f(0.0f, ((x + 128.0f) / 256.0f), 0.0f, 1.0f);
@@ -83,18 +93,27 @@ const int task2FadeArray[9] = { 2, 1, 0,					//index's of the faders for the ver
 						        1, 0, 2 };					//(figure if I'm going to hard code in the values might as well) 
 															//(use a const array instead of just inline code assignments   )
 															//(also just 3X3 as I will manually assign the alpha		   )
+
+/**********************************************************
+	DoTaskII
+	
+	Drawing a multi-colour triangle
+	
+	using a different set of faders for each vertex colour
+	
+***********************************************************/
 void DoTaskII(float f[])
 {
-	for (int x = 0; x < 3; x++)
+	for (int x = 0; x < 3; x++)														//loop through each vertex 
 	{
-		for (int y = 0; y < 3; y++)
+		for (int y = 0; y < 3; y++)													//and add each colour component to the colour array
 		{
 			task2ColourArray[x * 4 + y] = f[task2FadeArray[x * 3 + y]];
 		}
 		task2ColourArray[x * 4 + 3] = 1.0f;											//make sure to keep alpha at 1.0f
 	}
 
-	glEnableClientState(GL_VERTEX_ARRAY);
+	glEnableClientState(GL_VERTEX_ARRAY);											//set and draw the multicoloured triangle
 	glEnableClientState(GL_COLOR_ARRAY);
 
 	glColorPointer(4, GL_FLOAT, 0, &task2ColourArray[0]);
@@ -130,7 +149,13 @@ float task3ColourArray[28] = { 1.0f, 0.0f, 0.0f, 1.0f,			//Red triangle
 const unsigned int task3VertIndices[9] = { 0, 1, 2,
 								  3, 4, 2,
 								  5, 6, 2 };
-
+/**************************************************************
+	DoTaskIII
+	
+	Drawing multiple triangles with multiple colours, 
+	using an element array 
+	
+***************************************************************/
 void DoTaskIII(float f[])
 {
 	task3ColourArray[REDCENTER] = f[0];
@@ -166,21 +191,30 @@ unsigned int task4TriangleMap[1000] = {};
 
 int currentNumOfTris = MINTRIS;
 int TriCountTick = 0;
-
+/*****************************************************
+	DoTaskIV
+	
+	Just an extra bit for drawing a cirlce and using
+	the faders programmatically. 
+	
+	The number of vertex increases just to show things
+	are being calculated on the fly
+	
+******************************************************/
 void DoTaskIV(float f[])
 {
-	task4Vertices[0] = xOFFSET;						//the first vertex will be the origin/common to all the triangles
+	task4Vertices[0] = xOFFSET;								//the first vertex will be the origin/common to all the triangles
 	task4Vertices[1] = yOFFSET;
 	task4Vertices[2] = 0.0f;
-	task4ColourArray[0] = f[0];						//set to white and full alpha so it's always present
-	task4ColourArray[1] = f[1];
+	task4ColourArray[0] = f[0];								//the center point of the cirlce (common point of each trianble)
+	task4ColourArray[1] = f[1];								//will use the fader colour
 	task4ColourArray[2] = f[2];
 	task4ColourArray[3] = 1.0f;
 
-	TriCountTick++;
-	if (TriCountTick > (MAXTRIS - currentNumOfTris) / 4)
-	{
-		TriCountTick = 0;
+	TriCountTick++;										
+	if (TriCountTick > (MAXTRIS - currentNumOfTris) / 4)	//speed up the change of the number of triangles slowly over time
+	{														//because once we reach 50 or so triangles, it looks like not 
+		TriCountTick = 0;									//much is happening anyways
 		currentNumOfTris++;
 		if (currentNumOfTris > MAXTRIS)
 		{
@@ -194,15 +228,15 @@ void DoTaskIV(float f[])
 	{
 		task4Vertices[a * 3 + 0] = (xRADIUS * cos(angleStep * a)) + xOFFSET;	//X position of vertex
 		task4Vertices[a * 3 + 1] = (yRADIUS * sin(angleStep * a)) + yOFFSET;	//Y position of vertex
-		task4Vertices[a * 3 + 2] = 0.0f;									//Z position is always 0 and only here as a placeholder
+		task4Vertices[a * 3 + 2] = 0.0f;										//Z position is always 0 and only here as a placeholder
 
 		task4ColourArray[a * 4 + 0] = 0.0f;					//default everyone as off and then paint the Red, green, or blue
 		task4ColourArray[a * 4 + 1] = 0.0f;					//depending on if they are in the first, second, or third segments
 		task4ColourArray[a * 4 + 2] = 0.0f;
 		task4ColourArray[a * 4 + 3] = 1.0f;
 
-		if (a*angleStep < CIRCLESEGMENTS)
-		{
+		if (a*angleStep < CIRCLESEGMENTS)					//circle is divided into three segments that fades from one primary colour to the next
+		{													
 			task4ColourArray[a * 4 + 2] = 1.0f - ((a*angleStep / CIRCLESEGMENTS) - long(a*angleStep / CIRCLESEGMENTS));
 			task4ColourArray[a * 4 + 0] =(a*angleStep / CIRCLESEGMENTS) - long (a*angleStep / CIRCLESEGMENTS);
 		}
@@ -221,7 +255,7 @@ void DoTaskIV(float f[])
 	int triMapIdx = 0;
 	task4TriangleMap[triMapIdx++] = 0;
 	
-	for (int a = 1; a < currentNumOfTris; a++)
+	for (int a = 1; a < currentNumOfTris; a++)											//creating the element array
 	{
 		task4TriangleMap[triMapIdx++] = a;
 		task4TriangleMap[triMapIdx++] = a + 1;
@@ -230,7 +264,7 @@ void DoTaskIV(float f[])
 	task4TriangleMap[triMapIdx++] = currentNumOfTris;
 	task4TriangleMap[triMapIdx++] = 1;
 
-	glEnableClientState(GL_VERTEX_ARRAY);
+	glEnableClientState(GL_VERTEX_ARRAY);												//and finally draw it all up
 	glEnableClientState(GL_COLOR_ARRAY);
 
 	glColorPointer(4, GL_FLOAT, 0, &task4ColourArray[0]);
