@@ -21,17 +21,32 @@ void GameObject3D::Init()
 
 	// insert the data from the data array into the buffer
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertex), &vertex[0], GL_STATIC_DRAW);
+	glFinish();
+
+	glGenBuffers(1, &colrBuffHandle);
+
+	// bind the buffer as the active buffer for OpenGL to modify
+	glBindBuffer(GL_ARRAY_BUFFER, colrBuffHandle);
+
+	// insert the data from the data array into the buffer
+	glBufferData(GL_ARRAY_BUFFER, sizeof(colours), &colours[0], GL_STATIC_DRAW);
+	glFinish();
 }
 
 // used to render the object to the screen
 void GameObject3D::Draw()
 {	
 	glBindBuffer(GL_ARRAY_BUFFER, bufferHandle);
-
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glVertexPointer(3, GL_FLOAT, 0, nullptr);
+
+	glBindBuffer(GL_ARRAY_BUFFER, colrBuffHandle);
+	glEnableClientState(GL_COLOR_ARRAY);
+	glColorPointer(4, GL_FLOAT, 0, nullptr);
+
 	glDrawArrays(GL_TRIANGLES, 0, sizeof(vertex) / 3);
 	glDisableClientState(GL_VERTEX_ARRAY);
+	glDisableClientState(GL_COLOR_ARRAY);
 }
 
 // used to update processing on the object (in case it's moving or has some processing to compute)
@@ -45,12 +60,27 @@ void GameObject3D::Update()
 
 	if (EventHandler::events[ControlsEvents::DOWN_PRESSED])
 	{
-		glTranslatef(0.0f, -1.0f, 0.0f);
+		glTranslatef(0.0f, -0.5f, 0.0f);
 	}
-
 	if (EventHandler::events[ControlsEvents::UP_PRESSED])
 	{
-		glTranslatef(0.0f, 1.0f, 0.0f);
+		glTranslatef(0.0f, 0.5f, 0.0f);
+	}
+	if (EventHandler::events[ControlsEvents::LEFT_PRESSED])
+	{
+		glTranslatef(-0.5f, 0.0f, 0.0f);
+	}
+	if (EventHandler::events[ControlsEvents::RIGHT_PRESSED])
+	{
+		glTranslatef(0.5f, 0.0f, 0.0f);
+	}
+	if (EventHandler::events[ControlsEvents::W_PRESSED])
+	{
+		glTranslatef(0.0f, 0.0f, -0.5f);
+	}
+	if (EventHandler::events[ControlsEvents::S_PRESSED])
+	{
+		glTranslatef(0.0f, 0.0f, 0.5f);
 	}
 }
 

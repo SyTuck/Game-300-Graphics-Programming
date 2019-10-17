@@ -42,6 +42,21 @@ bool EventHandler::Update()
 			SetButton(ControlsEvents::DOWN_PRESSED, currEvents.key.type == SDL_KEYDOWN);
 			break;
 		}
+		case SDLK_LEFT:
+		{
+			SetButton(ControlsEvents::LEFT_PRESSED, currEvents.key.type == SDL_KEYDOWN);
+			break;
+		}
+		case SDLK_RIGHT:
+		{
+			SetButton(ControlsEvents::RIGHT_PRESSED, currEvents.key.type == SDL_KEYDOWN);
+			break;
+		}
+		case SDLK_ESCAPE:
+		{
+			success = false;
+		}
+
 		}
 	}	
 	return success;

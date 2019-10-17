@@ -32,6 +32,7 @@ private:
 	Transform3D transform;
 
 	GLuint bufferHandle;
+	GLuint colrBuffHandle;
 
 	// should be defined inside the header file
 	float vertex[36] = {
@@ -40,16 +41,33 @@ private:
 		0.0f, 0.5f, -2.0f,
 
 		-0.5f, 0.0f, -2.0f,
-		-0.5f, 0.0f, -50.0f,
+		-0.5f, 0.0f, -5.0f,
 		0.0f, 0.5f, -2.0f,
 
 		0.5f, 0.0f, -2.0f,
-		-0.5f, 0.0f, -50.0f,
+		-0.5f, 0.0f, -5.0f,
 		0.0f, 0.5f, -2.0f,
 
 		0.5f, 0.0f, -2.0f,
-		-0.5f, 0.0f, -50.0f,
+		-0.5f, 0.0f, -5.0f,
 		0.5f, 0.0f, -2.0f,
+	};
+	float colours[48] = {
+		1.0f, 0.2f, 0.2f, 1.0f,
+		1.0f, 0.2f, 0.2f, 1.0f,
+		1.0f, 0.2f, 0.2f, 1.0f,
+
+		0.4f, 1.0f, 0.4f, 1.0f,
+		0.4f, 1.0f, 0.4f, 1.0f,
+		0.4f, 1.0f, 0.4f, 1.0f,
+
+		0.6f, 0.6f, 1.0f, 1.0f,
+		0.6f, 0.6f, 1.0f, 1.0f,
+		0.6f, 0.6f, 1.0f, 1.0f,
+
+		0.8f, 0.8f, 0.8f, 1.0f,
+		0.8f, 0.8f, 0.8f, 1.0f,
+		0.8f, 0.8f, 0.8f, 1.0f,
 	};
 };
 

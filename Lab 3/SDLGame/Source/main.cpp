@@ -64,15 +64,17 @@ int main(int argc, char *argv[])
 		glClearColor(0.0, 0.0, 0.0, 1.0);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		// PART 1:
+		// PART 1: Initializing the View port
 		// set your matrix mode for dealing with the view
 		// load up the identity matrix
 		// setup your view
-		
-
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		glFrustum(-1.0f, 1.0f, -1.0f, 1.0f, 1.0f, 1000.0f);
 
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
+
 		// we push the matrix here so that we are dealing with a clear matrix for all our modifications of this object to remain on.
 		glPushMatrix();
 		myObj.Update();
