@@ -20,6 +20,8 @@ bool EventHandler::Update()
 	// Check for events
 	while (SDL_PollEvent(&currEvents))
 	{
+		SetButton(ControlsEvents::SHIFT_PRESSED, currEvents.key.keysym.mod && KMOD_SHIFT);
+
 		switch (currEvents.key.keysym.sym)
 		{
 		case SDLK_w:
@@ -52,11 +54,20 @@ bool EventHandler::Update()
 			SetButton(ControlsEvents::RIGHT_PRESSED, currEvents.key.type == SDL_KEYDOWN);
 			break;
 		}
+		case SDLK_q:
+		{
+			SetButton(ControlsEvents::Q_PRESSED, currEvents.key.type == SDL_KEYDOWN);
+			break;
+		}
+		case SDLK_a:
+		{
+			SetButton(ControlsEvents::A_PRESSED, currEvents.key.type == SDL_KEYDOWN);
+			break;
+		}
 		case SDLK_ESCAPE:
 		{
 			success = false;
 		}
-
 		}
 	}	
 	return success;

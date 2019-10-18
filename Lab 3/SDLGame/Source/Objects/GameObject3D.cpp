@@ -3,6 +3,17 @@
 
 GameObject3D::GameObject3D()
 {
+	transform.position.x = 0.0f;
+	transform.position.y = 0.0f;
+	transform.position.z = 0.0f;
+
+	transform.rotation.x = 0.0f;
+	transform.rotation.y = 0.0f;
+	transform.rotation.z = 0.0f;
+
+	transform.scale.x = 1.0f;
+	transform.scale.y = 1.0f;
+	transform.scale.z = 1.0f;
 }
 
 
@@ -13,6 +24,7 @@ GameObject3D::~GameObject3D()
 // used for any variables and data that needs to be setup on the object before we try to use it.
 void GameObject3D::Init()
 {
+
 	// generate a handle or name
 	glGenBuffers(1, &bufferHandle); 
 
@@ -58,30 +70,94 @@ void GameObject3D::Update()
 	// b) scale the tetrahedron in all directions equally down by half using a button press of your choosing
 	// c) rotate the tetrahedron along the Y axis with a button press of your choice.
 
+
 	if (EventHandler::events[ControlsEvents::DOWN_PRESSED])
 	{
-		glTranslatef(0.0f, -0.5f, 0.0f);
+		if (EventHandler::events[ControlsEvents::SHIFT_PRESSED])
+		{
+			transform.rotation.y -= 0.01f;
+		}
+		else
+		{
+			transform.position.y -= 0.001f;
+		}
 	}
-	if (EventHandler::events[ControlsEvents::UP_PRESSED])
+	else if (EventHandler::events[ControlsEvents::UP_PRESSED])
 	{
-		glTranslatef(0.0f, 0.5f, 0.0f);
+		if (EventHandler::events[ControlsEvents::SHIFT_PRESSED])
+		{
+			transform.rotation.y += 0.01f;
+		}
+		else
+		{
+			transform.position.y += 0.001f;
+		}
 	}
+
 	if (EventHandler::events[ControlsEvents::LEFT_PRESSED])
 	{
-		glTranslatef(-0.5f, 0.0f, 0.0f);
+		if (EventHandler::events[ControlsEvents::SHIFT_PRESSED])
+		{
+			transform.rotation.x -= 0.01f;
+		}
+		else
+		{
+			transform.position.x -= 0.001f;
+		}
 	}
-	if (EventHandler::events[ControlsEvents::RIGHT_PRESSED])
+	else if (EventHandler::events[ControlsEvents::RIGHT_PRESSED])
 	{
-		glTranslatef(0.5f, 0.0f, 0.0f);
+		if (EventHandler::events[ControlsEvents::SHIFT_PRESSED])
+		{
+			transform.rotation.x += 0.01f;
+		}
+		else
+		{
+			transform.position.x += 0.001f;
+		}
 	}
+
 	if (EventHandler::events[ControlsEvents::W_PRESSED])
 	{
-		glTranslatef(0.0f, 0.0f, -0.5f);
+		if (EventHandler::events[ControlsEvents::SHIFT_PRESSED])
+		{
+			transform.rotation.z -= 0.01f;
+		}
+		else
+		{
+			transform.position.z -= 0.001f;
+		}
 	}
-	if (EventHandler::events[ControlsEvents::S_PRESSED])
+	else if (EventHandler::events[ControlsEvents::S_PRESSED])
 	{
-		glTranslatef(0.0f, 0.0f, 0.5f);
+		if (EventHandler::events[ControlsEvents::SHIFT_PRESSED])
+		{
+			transform.rotation.z += 0.01f;
+		}
+		else
+		{
+			transform.position.z += 0.001f;
+		}
 	}
+
+	if (EventHandler::events[ControlsEvents::Q_PRESSED])
+	{
+		transform.scale.z = 2.0f;
+		transform.scale.y = 2.0f;
+		transform.scale.x = 2.0f;
+	}
+	else if (EventHandler::events[ControlsEvents::A_PRESSED])
+	{
+		transform.scale.z = 0.5f;
+		transform.scale.y = 0.5f;
+		transform.scale.x = 0.5f;
+	}
+
+	glTranslatef(transform.position.x, transform.position.y, transform.position.z);
+	glScalef(transform.scale.x, transform.scale.y, transform.scale.z);
+	glRotatef(transform.rotation.x, 1.0f, 0.0f, 0.0f);
+	glRotatef(transform.rotation.y, 0.0f, 1.0f, 0.0f);
+	glRotatef(transform.rotation.z, 0.0f, 0.0f, 1.0f);
 }
 
 // when the object is destroyed to ensure any memory allocated during it's lifetime is cleaned up.

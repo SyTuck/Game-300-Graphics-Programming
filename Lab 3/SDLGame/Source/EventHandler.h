@@ -9,6 +9,10 @@ enum ControlsEvents
 	DOWN_PRESSED,
 	LEFT_PRESSED,
 	RIGHT_PRESSED,
+	A_PRESSED,
+	Q_PRESSED,
+	
+	SHIFT_PRESSED, 
 
 	NUM_CONTROLS_EVENTS
 
@@ -25,9 +29,11 @@ public:
 	static const int NUM_EVENTS = 10;
 
 	static bool events[ControlsEvents::NUM_CONTROLS_EVENTS];
+
 private:
 
 	static void SetButton(ControlsEvents eventNum, bool pressed);
+
 };
 
 
