@@ -52,7 +52,7 @@ private:
 		-0.5f, 0.0f, -5.0f,
 		0.5f, 0.0f, -2.0f,
 	};
-	float colours[48] = {
+	float colours[48] = {			//some random colours to make the faces visible
 		1.0f, 0.2f, 0.2f, 1.0f,
 		1.0f, 0.2f, 0.2f, 1.0f,
 		1.0f, 0.2f, 0.2f, 1.0f,

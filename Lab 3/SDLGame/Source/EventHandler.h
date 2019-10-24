@@ -13,6 +13,7 @@ enum ControlsEvents
 	Q_PRESSED,
 	
 	SHIFT_PRESSED, 
+	CTRL_PRESSED,
 
 	NUM_CONTROLS_EVENTS
 

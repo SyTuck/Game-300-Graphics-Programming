@@ -20,7 +20,8 @@ bool EventHandler::Update()
 	// Check for events
 	while (SDL_PollEvent(&currEvents))
 	{
-		SetButton(ControlsEvents::SHIFT_PRESSED, currEvents.key.keysym.mod && KMOD_SHIFT);
+		SetButton(ControlsEvents::SHIFT_PRESSED, currEvents.key.keysym.mod & KMOD_SHIFT);
+		SetButton(ControlsEvents::CTRL_PRESSED, currEvents.key.keysym.mod & KMOD_CTRL);
 
 		switch (currEvents.key.keysym.sym)
 		{
