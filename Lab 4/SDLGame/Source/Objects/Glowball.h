@@ -8,12 +8,15 @@ public:
 	~Glowball();
 
 	void Init(string modelFile);
-//	void Draw();
+	void Draw();
 
 private:
-	float task4ColourArray[1000] = {};
-	float task4Vertices[1000] = {};
-	unsigned int task4TriangleMap[1000] = {};
+
+	#define NUMOFTRIS 30
+
+	float task4ColourArray[40] = {};
+	float task4TriangleMap[50] = {};
+	float task4Vertices[30] = {};
 
 	void DoTaskIV(float f[]);
 	

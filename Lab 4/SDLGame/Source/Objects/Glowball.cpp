@@ -11,23 +11,59 @@ Glowball::~Glowball()
 {
 }
 
+#define xOFFSET 0.0f
+#define yOFFSET 0.0f
+#define zOFFSET 0.0f
+
+#define xRADIUS (0.1f *0.75f)
+#define yRADIUS  0.1f
+#define zRadius  0.1f
+//#define MINTRIS 3					//for our 1000 arrays, we have a max of 250 triangles
+//#define MAXTRIS 249
+#define CIRCLERADIANS (2 * 3.14159265)
+#define CIRCLESEGMENTS ((2 * 3.14159265)/3)
+
+//int TriCountTick = 0;
+
 void Glowball::Init(string modelFile)
 {
-	ObjModel::Init(modelFile);
+	float task4Vertices[NUMOFTRIS*3] = {};
+	
+	float angleStep = CIRCLERADIANS / NUMOFTRIS;		//pre calculate for efficiency
+
+	for (int a = 1; a < NUMOFTRIS + 1; a++)
+	{
+		task4Vertices[a * 3 + 0] = (xRADIUS * cos(angleStep * a)) + xOFFSET;	//X position of vertex
+		task4Vertices[a * 3 + 1] = (yRADIUS * sin(angleStep * a)) + yOFFSET;	//Y position of vertex
+		task4Vertices[a * 3 + 2] = 0.0f;										//Z position is always 0 and only here as a placeholder
+	}
+
+
+	// generate a handle or name
+	glGenBuffers(1, &bufferHandle);
+
+	// bind the buffer as the active buffer for OpenGL to modify
+	glBindBuffer(GL_ARRAY_BUFFER, bufferHandle);
+
+	// insert the data from the data array into the buffer
+	glBufferData(GL_ARRAY_BUFFER, sizeof(task4Vertices), &task4Vertices[0], GL_STATIC_DRAW);
+
+
+//	ObjModel::Init(modelFile);
 	velocity.x = 0.0f;// 0.3;
 	velocity.y = 0.0f; // 0.05f;
 	velocity.z = 0.0f; // -0.2f;
-	transform.position.z = -10.0f;
-	transform.scale.x = 0.01f;
-	transform.scale.y = 0.01f;
-	transform.scale.z = 0.01f;
+	transform.position.z = 0.0f;
+//	transform.scale.x = 0.1f;
+//	transform.scale.y = 0.1f;
+//	transform.scale.z = 0.1f;
 
 	dimensions.x = 0.1f;	// width
 	dimensions.y = 0.1f;	// height
 	dimensions.z = 0.1f;	// length
 }
 
-/*
+
 void Glowball::Draw()
 {
 
@@ -50,24 +86,20 @@ void Glowball::Draw()
 		}
 	}
 
-	DoTaskIV(fader);
+	GLfloat eyeColor[4] = {fader[0],fader[1],fader[3], 1.0 };
+	glMaterialfv(GL_FRONT, GL_DIFFUSE, eyeColor);
+	glColor3f(fader[0], fader[1], fader[3]);
+
+	glBindBuffer(GL_ARRAY_BUFFER, bufferHandle);
+
+	glEnableClientState(GL_VERTEX_ARRAY);
+	glVertexPointer(3, GL_FLOAT, 0, nullptr);
+	glDrawArrays(GL_TRIANGLES, 0, NUMOFTRIS);
+	glDisableClientState(GL_VERTEX_ARRAY);
 
 }
-*/
-#define xOFFSET 0.0f
-#define yOFFSET 0.0f
-#define zOFFSET 0.0f
 
-#define xRADIUS (0.1f *0.75f)
-#define yRADIUS  0.1f
-#define zRadius  0.1f
-//#define MINTRIS 3					//for our 1000 arrays, we have a max of 250 triangles
-//#define MAXTRIS 249
-#define CIRCLERADIANS (2 * 3.14159265)
-#define CIRCLESEGMENTS ((2 * 3.14159265)/3)
 
-int currentNumOfTris = 10;
-//int TriCountTick = 0;
 /*****************************************************
 	DoTaskIV
 
@@ -80,6 +112,8 @@ int currentNumOfTris = 10;
 ******************************************************/
 void Glowball::DoTaskIV(float f[])
 {
+	int currentNumOfTris = 10;
+
 	task4Vertices[0] = xOFFSET;								//the first vertex will be the origin/common to all the triangles
 	task4Vertices[1] = yOFFSET;
 	task4Vertices[2] = 0.0f;

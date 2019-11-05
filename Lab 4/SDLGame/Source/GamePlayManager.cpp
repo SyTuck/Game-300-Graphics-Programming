@@ -57,7 +57,7 @@ void GamePlayManager::InitGameplay()
 	LightManager::GetInstance()->SetupSimpleLighting();
 
 	pumpkin.Init("Data\\Art\\single_pumpkin.obj");
-	//eyeBall.Init("Data\\Art\\2.obj");
+	eyeBall.Init("Data\\Art\\2.obj");
 	walls.Init(20.0f);
 }
 
@@ -72,10 +72,11 @@ void GamePlayManager::Update()
 	pumpkin.Draw();
 	glPopMatrix();
 
-	//glPushMatrix();
+	glLoadIdentity();
+	glPushMatrix();
 	//eyeBall.Update();
-	//eyeBall.Draw();
-	//glPopMatrix();
+	eyeBall.Draw();
+	glPopMatrix();
 
 	glLoadIdentity();
 	glPushMatrix();
