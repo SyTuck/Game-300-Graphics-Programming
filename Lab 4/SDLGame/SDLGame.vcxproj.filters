@@ -47,6 +47,9 @@
     <ClCompile Include="Source\GamePlayManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Objects\Glowball.cpp">
+      <Filter>Source Files\Objects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\EventHandler.h">
@@ -81,6 +84,9 @@
     </ClInclude>
     <ClInclude Include="Source\GamePlayManager.h">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Objects\Glowball.h">
+      <Filter>Source Files\Objects</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -15,6 +15,7 @@
 
 #include "Objects\Pumpkin.h"
 #include "Objects\Wall.h"
+#include "Objects\Glowball.h"
 
 class GamePlayManager
 {
@@ -40,7 +41,9 @@ private:
 	~GamePlayManager();
 
 	Pumpkin pumpkin;
+	Glowball eyeBall;
 	Box walls;
+
 
 	static GamePlayManager* instance;
 };

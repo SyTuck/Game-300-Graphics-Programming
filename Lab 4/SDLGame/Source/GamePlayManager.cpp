@@ -57,6 +57,7 @@ void GamePlayManager::InitGameplay()
 	LightManager::GetInstance()->SetupSimpleLighting();
 
 	pumpkin.Init("Data\\Art\\single_pumpkin.obj");
+	//eyeBall.Init("Data\\Art\\2.obj");
 	walls.Init(20.0f);
 }
 
@@ -71,11 +72,18 @@ void GamePlayManager::Update()
 	pumpkin.Draw();
 	glPopMatrix();
 
+	//glPushMatrix();
+	//eyeBall.Update();
+	//eyeBall.Draw();
+	//glPopMatrix();
+
 	glLoadIdentity();
 	glPushMatrix();
 	walls.Update();
 	walls.Draw();
 	glPopMatrix();
+
+
 
 	int collResult = pumpkin.CheckCollision(walls);		//changed nature of collision. Now it detects if the bounding box is WITHIN the other object
 	if (collResult)										
