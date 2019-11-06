@@ -36,14 +36,20 @@ public:
 private:
 
 	void SwapSplash(SDL_Window* mainWindow, SDL_Renderer* mainRenderer, Uint32 delay, GameObject2D screen);
+	void ReflectPumpkin(Pumpkin *pkn, int axs);
 
 	GamePlayManager();
 	~GamePlayManager();
 
-	Pumpkin pumpkin;
-	Glowball eyeBall;
-	Box walls;
 
+
+//	Pumpkin pumpkin;
+	#define TOTPUMPKINS 10
+	Pumpkin pumpkins[TOTPUMPKINS];
+//	Glowball eyeBall;
+	Box walls;
+	
+	bool freeForAll = false;
 
 	static GamePlayManager* instance;
 };

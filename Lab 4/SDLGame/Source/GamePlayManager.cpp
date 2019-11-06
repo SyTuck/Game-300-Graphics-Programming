@@ -52,31 +52,45 @@ void GamePlayManager::SwapSplash(SDL_Window* mainWindow, SDL_Renderer* mainRende
 void GamePlayManager::InitGameplay()
 {
 	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_CULL_FACE);
+//	glEnable(GL_CULL_FACE);
 
 	LightManager::GetInstance()->SetupSimpleLighting();
 
+	Pumpkin pumpkin;
 	pumpkin.Init("Data\\Art\\single_pumpkin.obj");
-	eyeBall.Init("Data\\Art\\2.obj");
+	for (int x = 0; x < TOTPUMPKINS; x++)
+	{
+		pumpkins[x] = pumpkin;
+
+	}
+
+//	eyeBall.Init("Data\\Art\\2.obj");
 	walls.Init(20.0f);
 }
 
 
 void GamePlayManager::Update()
 {
-	glLoadIdentity();
-	LightManager::GetInstance()->ApplyLighting();
 
-	glPushMatrix();
-	pumpkin.Update();
-	pumpkin.Draw();
-	glPopMatrix();
 
-	glLoadIdentity();
-	glPushMatrix();
+
+	for (int x = 0; x < TOTPUMPKINS; x++)
+	{
+
+		glLoadIdentity();
+		LightManager::GetInstance()->ApplyLighting();
+
+		glPushMatrix();
+		pumpkins[x].Update();
+		pumpkins[x].Draw();
+		glPopMatrix();
+	}
+
+//	glLoadIdentity();
+//	glPushMatrix();
 	//eyeBall.Update();
-	eyeBall.Draw();
-	glPopMatrix();
+//	eyeBall.Draw();
+//	glPopMatrix();
 
 	glLoadIdentity();
 	glPushMatrix();
@@ -85,27 +99,61 @@ void GamePlayManager::Update()
 	glPopMatrix();
 
 
-
-	int collResult = pumpkin.CheckCollision(walls);		//changed nature of collision. Now it detects if the bounding box is WITHIN the other object
-	if (collResult)										
+	for (int x = 0; x < TOTPUMPKINS; x++)
 	{
-		cout << "pumpkin tried escaping the level" << endl;
-		// Once you trigger this print out upon the pumpkin exiting the level, reflect the velocity on the axis it made contact with.
-			// this may require you to modify the CheckCollision function to return a value more representative of how the contact was made ( like a Vec3, enum or integer representing the axis)		
-			// Once reflected add to the collision detection function so that it also checks for all other dimensions and not just the x.
-			// your pumpkin should continuously bounce within the levels box
-		
-		if (collResult & XCOLLISION)			//mask off for each possible collision in case of simultaneous collisions (corner cases)
+		int YcollResult = NOCOLLISION;
+		int collResult = pumpkins[x].CheckWithin(walls);		//changed nature of collision. Now it detects if the bounding box is WITHIN the other object
+
+		if ((freeForAll) && (collResult == NOCOLLISION))
 		{
-			pumpkin.ReflectXVelocity();
+			for (int y = x+1; y < TOTPUMPKINS; y++)
+			{
+				YcollResult = pumpkins[x].CheckCollision(pumpkins[y]);
+				if (YcollResult)
+				{
+					if (pumpkins[x].freeFromAll)
+					{
+						ReflectPumpkin(&pumpkins[y], YcollResult);
+						collResult = YcollResult;
+						cout << "pumpkin " << y << " collided with pumkin " << x << endl;
+						break;
+					}
+				}
+				else
+				{
+					pumpkins[x].freeFromAll = true;
+				}
+			}
 		}
-		if (collResult & YCOLLISION)
+		if (collResult)
 		{
-			pumpkin.ReflectYVelocity();
+			freeForAll = true;									//once we have our first wall collision, "blow out" all the pumpkins
+			if (!YcollResult)
+			{
+				cout << "pumpkin " << x << " tried escaping the level" << endl;
+			}
+			// Once you trigger this print out upon the pumpkin exiting the level, reflect the velocity on the axis it made contact with.
+				// this may require you to modify the CheckCollision function to return a value more representative of how the contact was made ( like a Vec3, enum or integer representing the axis)		
+				// Once reflected add to the collision detection function so that it also checks for all other dimensions and not just the x.
+				// your pumpkin should continuously bounce within the levels box
+
+			ReflectPumpkin(&pumpkins[x], collResult);
 		}
-		if (collResult & ZCOLLISION)
-		{
-			pumpkin.ReflectZVelocity();
-		}
+	}
+}
+
+void GamePlayManager::ReflectPumpkin(Pumpkin *pkn, int axs)
+{
+	if (axs & XCOLLISION)			//mask off for each possible collision in case of simultaneous collisions (corner cases)
+	{
+		pkn->ReflectXVelocity();
+	}
+	if (axs & YCOLLISION)
+	{
+		pkn->ReflectYVelocity();
+	}
+	if (axs & ZCOLLISION)
+	{
+		pkn->ReflectZVelocity();
 	}
 }

@@ -20,6 +20,8 @@ public:
 	void Update();
 	void Init(string modelFile);
 
+	bool freeFromAll = false;
+
 private:
 
 	GLfloat pumpkinColor[4] = { 0.8f, 0.5f, 0.3f, 1.0 };

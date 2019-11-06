@@ -36,8 +36,10 @@ public:
 	virtual void Destroy() {};
 
 	// when the object is destroyed to ensure any memory allocated during it's lifetime is cleaned up.
-	int CheckCollision(GameObject3D otherObj);		//Modified to return an Axis enum for the collision detection
+	int CheckWithin(GameObject3D otherObj);			//This function checks if all sides are within another object and reports any edge that is not
 													//(no collision = NOCOLLISION = 0 = false so boolean checks will still work)
+
+	int CheckCollision(GameObject3D otherObj);		//This is standard collision detection but also reports the edge of the collision
 
 	void ReflectXVelocity();						//These methods are use to reverse the velocity of a specific access
 	void ReflectYVelocity();
