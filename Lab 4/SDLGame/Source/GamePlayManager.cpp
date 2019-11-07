@@ -71,12 +71,8 @@ void GamePlayManager::InitGameplay()
 
 void GamePlayManager::Update()
 {
-
-
-
 	for (int x = 0; x < TOTPUMPKINS; x++)
 	{
-
 		glLoadIdentity();
 		LightManager::GetInstance()->ApplyLighting();
 
@@ -102,28 +98,45 @@ void GamePlayManager::Update()
 	for (int x = 0; x < TOTPUMPKINS; x++)
 	{
 		int YcollResult = NOCOLLISION;
-		int collResult = pumpkins[x].CheckWithin(walls);		//changed nature of collision. Now it detects if the bounding box is WITHIN the other object
+		int collResult = pumpkins[x].CheckWithin(walls);					//changed nature of collision. Now it detects if the bounding box is WITHIN the other object
 
-		if ((freeForAll) && (collResult == NOCOLLISION))
+		if ((freeForAll) && (collResult == NOCOLLISION))					//only check for pumpkin collisions after the first wall hit
 		{
-			for (int y = x+1; y < TOTPUMPKINS; y++)
+			for (int y = x+1; y < TOTPUMPKINS; y++)							
 			{
 				YcollResult = pumpkins[x].CheckCollision(pumpkins[y]);
 				if (YcollResult)
 				{
-					if (pumpkins[x].freeFromAll)
+					if (pumpkins[x].freeFromAll)							//only process pumpkin collision if the pumkin is "out in the open"
 					{
-						ReflectPumpkin(&pumpkins[y], YcollResult);
-						collResult = YcollResult;
+						if (YcollResult & OVERTAKECOLLIDE)					//if the pumkin we've hit is moving faster than us
+						{
+							if (YcollResult & OTHERHIT)						//only relfect it if it (pumpkin(y)) hit us (pumpkin(x))
+							{
+								ReflectPumpkin(&pumpkins[y], YcollResult);
+							}
+							else											//otherwise, we (pumpkin(x) are reflected
+							{
+								collResult = YcollResult;
+							}
+						}
+						else												//for head on collisions, reflect both of us
+						{
+							ReflectPumpkin(&pumpkins[y], YcollResult);
+							collResult = YcollResult;
+						}
+						pumpkins[x].freeFromAll = false;					//block any further collisions until we are "clear of all pumpkins"
+						pumpkins[y].freeFromAll = false;					//(oherwise we bounce around because we only are only doing simple reflections and not multi-axis/complex angle reflections)
 						cout << "pumpkin " << y << " collided with pumkin " << x << endl;
 						break;
 					}
 				}
-				else
-				{
-					pumpkins[x].freeFromAll = true;
-				}
 			}
+			if (YcollResult == NOCOLLISION)
+			{
+				pumpkins[x].freeFromAll = true;
+			}
+
 		}
 		if (collResult)
 		{
@@ -144,6 +157,8 @@ void GamePlayManager::Update()
 
 void GamePlayManager::ReflectPumpkin(Pumpkin *pkn, int axs)
 {
+
+
 	if (axs & XCOLLISION)			//mask off for each possible collision in case of simultaneous collisions (corner cases)
 	{
 		pkn->ReflectXVelocity();

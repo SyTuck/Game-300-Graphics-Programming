@@ -44,13 +44,13 @@ private:
 
 
 //	Pumpkin pumpkin;
-	#define TOTPUMPKINS 10
+	#define TOTPUMPKINS 3
 	Pumpkin pumpkins[TOTPUMPKINS];
 //	Glowball eyeBall;
 	Box walls;
 	
-	bool freeForAll = false;
-
+	bool freeForAll = false;				//flag to disable pumpkin/pumpkin collisions till after the first wall collide 
+											//(so pumkins appear to burst out)
 	static GamePlayManager* instance;
 };
 

@@ -14,7 +14,10 @@ enum COLLISIONAXIS			//collision enums are set as bit values so multiple simulta
 	NOCOLLISION = false,
 	XCOLLISION = 1,
 	YCOLLISION = 2,
-	ZCOLLISION = 4
+	ZCOLLISION = 4,
+	OVERTAKECOLLIDE = 32,	//this indicates that the object we're checking collision hit us (for overtake collisions)
+	OTHERHIT = 64,			//this flags that the objects are going in the same direction when they collided
+	NEGATIVECOLLIDE = 128	//mark collisions that happen on the negative faces (back, bottom, left)
 };
 
 class GameObject3D

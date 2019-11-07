@@ -16,9 +16,9 @@ void Pumpkin::Init(string modelFile)
 	velocity.z = -0.2f;
 	transform.position.z = -10.0f;
 
-	dimensions.x = 1.0;	// width
-	dimensions.y = 1.0;	// height
-	dimensions.z = 1.0;	// length
+	dimensions.x = 4.0;	// width
+	dimensions.y = 4.0;	// height
+	dimensions.z = 4.0;	// length
 }
 
 // this is used to process individual vertices for your model
