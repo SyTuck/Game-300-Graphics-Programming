@@ -15,7 +15,6 @@
 
 #include "Objects\Pumpkin.h"
 #include "Objects\Wall.h"
-#include "Objects\Glowball.h"
 
 class GamePlayManager
 {
@@ -36,18 +35,13 @@ public:
 private:
 
 	void SwapSplash(SDL_Window* mainWindow, SDL_Renderer* mainRenderer, Uint32 delay, GameObject2D screen);
-	void ReflectPumpkin(Pumpkin *pkn, int axs);
 
 	GamePlayManager();
 	~GamePlayManager();
 
-	#define TOTPUMPKINS 3
-	Pumpkin pumpkins[TOTPUMPKINS];
-//	Glowball eyeBall;
+	Pumpkin pumpkin;
 	Box walls;
-	
-	bool freeForAll = false;				//flag to disable pumpkin/pumpkin collisions till after the first wall collide 
-											//(so pumkins appear to burst out)
+
 	static GamePlayManager* instance;
 };
 

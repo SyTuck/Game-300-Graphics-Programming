@@ -111,12 +111,12 @@ void GamePlayManager::Update()
 					{
 						if (YcollResult & OVERTAKECOLLIDE)					//if the pumkin we've hit is moving faster than us
 						{
-							if (YcollResult & OTHERHIT)						//only relfect it if it (pumpkin(y)) hit us (pumpkin(x))
-							{
+							if (YcollResult & OTHERHIT)						//only relfect it if it [pumpkin(y)] hit us [pumpkin(x)]
+							{											
 								ReflectPumpkin(&pumpkins[y], YcollResult);
 							}
-							else											//otherwise, we (pumpkin(x) are reflected
-							{
+							else											//otherwise, we [pumpkin(x)] are reflected
+							{												//
 								collResult = YcollResult;
 							}
 						}
@@ -126,14 +126,14 @@ void GamePlayManager::Update()
 							collResult = YcollResult;
 						}
 						pumpkins[x].freeFromAll = false;					//block any further collisions until we are "clear of all pumpkins"
-						pumpkins[y].freeFromAll = false;					//(oherwise we bounce around because we only are only doing simple reflections and not multi-axis/complex angle reflections)
+						pumpkins[y].freeFromAll = false;					//(oherwise pumkins "lock" together because we only are only doing simple reflections and not multi-axis/complex angle reflections)
 						cout << "pumpkin " << y << " collided with pumkin " << x << endl;
 						break;
 					}
 				}
 			}
-			if (YcollResult == NOCOLLISION)
-			{
+			if (YcollResult == NOCOLLISION)									//If the pumpkin did not hit any other pumpkin re-enable pumpkin/pumpkin collisions
+			{																//(more attempts to prevent locked up pumpkins)
 				pumpkins[x].freeFromAll = true;
 			}
 
