@@ -46,6 +46,8 @@ int main(int argc, char *argv[])
 	ShaderManager::GetInstance()->LoadShaders();
 	GamePlayManager::GetInstance()->InitGameplay();
 
+	float offset = 0;
+
 	// Main game loop
 	while (GameRunning) 
 	{
@@ -53,7 +55,7 @@ int main(int argc, char *argv[])
 		// handle button events
 		GameRunning = EventHandler::Update();
 		// pause to control framerate
-		SDL_Delay(3);
+		//SDL_Delay(3);
 
 		//glClearColor(0.0, 0.0, 0.0, 1.0);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -71,7 +73,12 @@ int main(int argc, char *argv[])
 		
 		GamePlayManager::GetInstance()->Update();
 
-		ShaderManager::GetInstance()->Render();
+		offset += 0.010f;
+		if (offset > 0.25f)
+		{
+			offset = -0.60f;
+		}
+		ShaderManager::GetInstance()->Render(offset);
 
 		SDL_GL_SwapWindow(window);
 	}

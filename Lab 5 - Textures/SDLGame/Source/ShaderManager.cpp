@@ -148,42 +148,47 @@ void ShaderManager::LoadUVs()
 
 void ShaderManager::LoadTextures()
 {
+	unsigned int width, height;
+	unsigned char* imgData;
+
 	// create a handle for the texture so openGL has an area allocated to manage all our binary image data.
-	glGenTextures(2, &Texture0[0]);
+	glGenTextures(3, &Texture[0]);
 
 	// now tell OpenGL this is the texture we are currently using for all subsequent texture calls.
 	glActiveTexture(GL_TEXTURE1);
-	glBindTexture(GL_TEXTURE_2D, Texture0[0]);
-
-	unsigned int width, height;
-	unsigned char* imgData = Utils::loadBMP("Data\\Art\\example.bmp", width, height);
-
+	glBindTexture(GL_TEXTURE_2D, Texture[0]);
+	imgData = Utils::loadBMP("Data\\Art\\example.bmp", width, height);
 	// load our texture data up here
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_BGR, GL_UNSIGNED_BYTE, imgData);
-
 	// configure mipmapping levels
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-
 	glGenerateMipmap(GL_TEXTURE_2D);
-
-	TextureUniformHandle0 = glGetUniformLocation(programObj, "texture0");
-
+	TextureUniformHandle[0] = glGetUniformLocation(programObj, "texture0");
+	
 	glActiveTexture(GL_TEXTURE2);	
-	glBindTexture(GL_TEXTURE_2D, Texture0[1]);
-
+	glBindTexture(GL_TEXTURE_2D, Texture[1]);
 	imgData = Utils::loadBMP("Data\\Art\\example2.bmp", width, height);							//load in the second texture
-
 	// load our texture data up here
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_BGR, GL_UNSIGNED_BYTE, imgData);
-
 	// configure mipmapping levels
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-
 	glGenerateMipmap(GL_TEXTURE_2D);
+	TextureUniformHandle[1] = glGetUniformLocation(programObj, "texture1");
+	
+	glActiveTexture(GL_TEXTURE3);
+	glBindTexture(GL_TEXTURE_2D, Texture[2]);
+	imgData = Utils::loadBMP("Data\\Art\\dot.bmp", width, height);							//load in the second texture
+	// load our texture data up here
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_BGR, GL_UNSIGNED_BYTE, imgData);
+	// configure mipmapping levels
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glGenerateMipmap(GL_TEXTURE_2D);
+	TextureUniformHandle[2] = glGetUniformLocation(programObj, "texture2");
+	glActiveTexture(GL_TEXTURE3);
 
-	TextureUniformHandle1 = glGetUniformLocation(programObj, "texture1");
 }
 
 void ShaderManager::LoadShaderFromFile(const char * shaderfile, GLenum type)
@@ -257,7 +262,7 @@ void ShaderManager::LoadShaders()
 	LoadTextures();
 }
 
-void ShaderManager::Render()
+void ShaderManager::Render(float shft)
 {
 	glUseProgram(programObj);
 
@@ -270,11 +275,14 @@ void ShaderManager::Render()
 	glBindBuffer(GL_ARRAY_BUFFER, UVHandle);
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
 
-	// pass our data to openGL to store for the shaders use.
-	glUniform1i(TextureUniformHandle0, Texture0[0]);
-//	glDrawArrays(GL_TRIANGLES, 0, 12 * 3);
+	glVertexAttrib1f(2, shft);
 
-	glUniform1i(TextureUniformHandle1, Texture0[1]);
+
+
+	// pass our data to openGL to store for the shaders use.
+	glUniform1i(TextureUniformHandle[0], Texture[0]);
+	glUniform1i(TextureUniformHandle[1], Texture[1]);
+	glUniform1i(TextureUniformHandle[2], Texture[2]);
 	glDrawArrays(GL_TRIANGLES, 0, 12 * 3);
 
 	glDisableVertexAttribArray(0);

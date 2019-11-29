@@ -23,7 +23,7 @@ public:
 
 	void LoadShaders();
 
-	void Render();
+	void Render(float shft);
 
 	void Shutdown();
 
@@ -43,10 +43,9 @@ private:
 	GLuint vao;
 
 	GLuint verticesHandle;
-	GLuint Texture0[2];
+	GLuint Texture[3];
 	GLuint UVHandle;
-	GLint  TextureUniformHandle0;
-	GLint  TextureUniformHandle1;
+	GLint  TextureUniformHandle[3];
 
 	static ShaderManager* instance;
 };
