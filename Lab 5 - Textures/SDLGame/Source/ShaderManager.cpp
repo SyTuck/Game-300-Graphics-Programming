@@ -179,7 +179,7 @@ void ShaderManager::LoadTextures()
 	
 	glActiveTexture(GL_TEXTURE3);
 	glBindTexture(GL_TEXTURE_2D, Texture[2]);
-	imgData = Utils::loadBMP("Data\\Art\\dot.bmp", width, height);							//load in the second texture
+	imgData = Utils::loadBMP("Data\\Art\\dot.bmp", width, height);							//load in the third texture (highlight)
 	// load our texture data up here
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_BGR, GL_UNSIGNED_BYTE, imgData);
 	// configure mipmapping levels
