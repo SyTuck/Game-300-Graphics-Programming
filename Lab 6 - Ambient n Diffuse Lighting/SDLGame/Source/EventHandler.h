@@ -28,6 +28,7 @@ enum ControlsEvents
 
 	DEL_PRESSED,
 	HOME_PRESSED,
+	END_PRESSED,
 
 	NUM_CONTROLS_EVENTS
 

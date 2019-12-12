@@ -122,6 +122,11 @@ bool EventHandler::Update()
 			SetButton(ControlsEvents::HOME_PRESSED, currEvents.key.type == SDL_KEYDOWN);
 			break;
 		}
+		case SDLK_END:
+		{
+			SetButton(ControlsEvents::END_PRESSED, currEvents.key.type == SDL_KEYDOWN);
+			break;
+		}
 		case SDLK_ESCAPE:
 		{
 			success = false;
